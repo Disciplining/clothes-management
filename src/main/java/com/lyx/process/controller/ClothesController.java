@@ -7,9 +7,7 @@ import com.lyx.process.service.IClothesService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -27,10 +25,17 @@ public class ClothesController
 	@Qualifier("clothesServiceImpl")
 	private IClothesService service;
 
-	@ApiOperation("添加一件衣物")
 	@PostMapping("/save")
+	@ApiOperation("添加一件衣物")
 	public CommonResult save(ClotheSaveDto dto)
 	{
 		return service.save(dto);
+	}
+
+	@GetMapping("/list/{kind}")
+	@ApiOperation("获得某类衣物")
+	public CommonResult listByKind(@PathVariable("kind") int kind)
+	{
+		return service.listByKind(kind);
 	}
 }

@@ -16,4 +16,6 @@ import com.lyx.entity.Clothes;
 public interface IClothesService extends IService<Clothes>
 {
 	CommonResult save(ClotheSaveDto dto);
+
+	CommonResult listByKind(int kind);
 }

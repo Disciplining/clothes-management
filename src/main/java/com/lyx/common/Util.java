@@ -49,4 +49,20 @@ public class Util
 				return false;
 		}
 	}
+
+	/**
+	 * 判断类型的数字是否合法
+	 * true-合法 false-不合法
+	 */
+	public static boolean kindIsOk(int kind)
+	{
+		if ( (kind!=Constant.ClotheSKind.DOWN_CLOTHES) &&
+				(kind!=Constant.ClotheSKind.UP_CLOTHES) &&
+				(kind!=Constant.ClotheSKind.SHOES) )
+		{
+			return false;
+		}
+
+		return true;
+	}
 }

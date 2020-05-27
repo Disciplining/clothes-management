@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.common.CommonResult;
-import com.lyx.common.Constant;
 import com.lyx.common.Util;
 import com.lyx.config.QiniuOSS;
 import com.lyx.dto.ClotheSaveDto;
@@ -40,9 +39,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		{
 			return CommonResult.errorMsg("名称不能为空");
 		}
-		if ( (dto.getKind()!=Constant.ClotheSKind.DOWN_CLOTHES) &&
-				(dto.getKind()!=Constant.ClotheSKind.UP_CLOTHES) &&
-				(dto.getKind()!=Constant.ClotheSKind.SHOES) )
+		if (!Util.kindIsOk(dto.getKind()))
 		{
 			return CommonResult.errorMsg("种类不正确");
 		}
@@ -73,6 +70,21 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 			System.out.println("添加衣物失败，错误信息：" + e.getMessage());
 			return CommonResult.errorMsg("添加衣物失败");
 		}
+	}
+
+	@Override
+	public CommonResult listByKind(int kind)
+	{
+		if (!Util.kindIsOk(kind))
+		{
+			return CommonResult.errorMsg("种类不正确");
+		}
+		List<Clothes> list = new LambdaQueryChainWrapper<>(this.baseMapper)
+								.eq(Clothes::getKind, kind)
+								.orderByAsc(Clothes::getSequence)
+								.list();
+
+		return CommonResult.successData(list);
 	}
 
 	/**
