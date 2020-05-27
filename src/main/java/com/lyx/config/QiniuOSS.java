@@ -2,6 +2,7 @@ package com.lyx.config;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.lyx.common.CommonUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
@@ -11,6 +12,9 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Component("qiniuOSS")
 public class QiniuOSS
@@ -32,11 +36,22 @@ public class QiniuOSS
 	 * @param pic 图片文件
 	 * @return 外链
 	 */
-	public String uploadClothesPic(byte[] pic)
+	public String uploadClothesPic(MultipartFile pic)
 	{
-		String key = "clothes/" + IdUtil.simpleUUID();
-
-		return this.upload(pic, key);
+		try
+		{
+			StringBuilder key = new StringBuilder()
+					.append("clothes/")
+					.append(IdUtil.simpleUUID())
+					.append(".")
+					.append(CommonUtil.getType(pic.getOriginalFilename()));
+			return this.upload(pic.getBytes(), key.toString());
+		}
+		catch (IOException e)
+		{
+			System.out.println("文件转换失败：" + e.getMessage());
+			return null;
+		}
 	}
 
 	/**
@@ -77,6 +92,8 @@ public class QiniuOSS
 
 		return true;
 	}
+
+	// ------------------------------------
 
 	private String getUploadToken()
 	{

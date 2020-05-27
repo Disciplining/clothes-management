@@ -3,7 +3,7 @@ package com.lyx.common;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.StrUtil;
 
-public class Util
+public class CommonUtil
 {
 	/**
 	 * 根据文件名获得文件类型

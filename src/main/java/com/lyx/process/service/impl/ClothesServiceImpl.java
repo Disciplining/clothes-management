@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.common.CommonResult;
-import com.lyx.common.Util;
+import com.lyx.common.CommonUtil;
 import com.lyx.config.QiniuOSS;
 import com.lyx.dto.ClotheSaveDto;
 import com.lyx.entity.Clothes;
@@ -39,7 +39,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		{
 			return CommonResult.errorMsg("名称不能为空");
 		}
-		if (!Util.kindIsOk(dto.getKind()))
+		if (!CommonUtil.kindIsOk(dto.getKind()))
 		{
 			return CommonResult.errorMsg("种类不正确");
 		}
@@ -47,14 +47,18 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		{
 			return CommonResult.errorMsg("请上传文件");
 		}
-		if (!Util.isPicFile(dto.getFile().getOriginalFilename()))
+		if (!CommonUtil.isPicFile(dto.getFile().getOriginalFilename()))
 		{
 			return CommonResult.errorMsg("上传的不是图片");
 		}
 
 		try
 		{
-			String url = qiniuOSS.uploadClothesPic(dto.getFile().getBytes());
+			String url = qiniuOSS.uploadClothesPic(dto.getFile());
+			if (StrUtil.isBlank(url))
+			{
+				return CommonResult.errorMsg("文件上传失败");
+			}
 			int sequence = this.getLastSequence(dto.getKind()) + 1;
 
 			Clothes clothes = new Clothes();
@@ -99,7 +103,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	@Override
 	public CommonResult listByKind(int kind)
 	{
-		if (!Util.kindIsOk(kind))
+		if (!CommonUtil.kindIsOk(kind))
 		{
 			return CommonResult.errorMsg("种类不正确");
 		}
