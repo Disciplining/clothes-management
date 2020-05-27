@@ -3,8 +3,11 @@ package com.lyx.config;
 import cn.hutool.core.io.file.FileReader;
 		import cn.hutool.core.util.IdUtil;
 		import com.alibaba.fastjson.JSONObject;
-		import com.qiniu.http.Response;
-		import com.qiniu.storage.Configuration;
+import com.lyx.common.Util;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.BucketManager;
+import com.qiniu.storage.Configuration;
 		import com.qiniu.storage.Region;
 		import com.qiniu.storage.UploadManager;
 		import com.qiniu.util.Auth;
@@ -35,6 +38,11 @@ public class QiniuOSS
 	 */
 	public String uploadClothesPic(File pic)
 	{
+		if (!Util.isPicFile(pic))
+		{
+			throw new RuntimeException("文件不是图片");
+		}
+
 		String key = "clothes/" + IdUtil.simpleUUID();
 
 		return this.upload(pic, key);
@@ -49,8 +57,8 @@ public class QiniuOSS
 	{
 		try
 		{
-			UploadManager UPLOAD_MANAGER = new UploadManager(new Configuration(Region.region0()));
-			Response res = UPLOAD_MANAGER.put(new FileReader(file).readBytes(), key, this.getUploadToken());
+			UploadManager uploadManager = new UploadManager(this.getCfg());
+			Response res = uploadManager.put(new FileReader(file).readBytes(), key, this.getUploadToken());
 			return domain + JSONObject.parseObject(res.bodyString()).get("key");
 		}
 		catch (Exception e)
@@ -61,10 +69,36 @@ public class QiniuOSS
 	}
 
 	/**
-	 * 获取token
+	 * 删除七牛云上的一个文件
 	 */
+	public boolean delete(String key)
+	{
+		try
+		{
+			BucketManager bucketManager = new BucketManager(this.getAuth(), this.getCfg());
+			bucketManager.delete(bucketName, key);
+		}
+		catch (QiniuException ex)
+		{
+			System.err.println("删除失败：" + ex.response.toString());
+			return false;
+		}
+
+		return true;
+	}
+
 	private String getUploadToken()
 	{
-		return Auth.create(accessKey, secretKey).uploadToken(bucketName);
+		return this.getAuth().uploadToken(bucketName);
+	}
+
+	private Auth getAuth()
+	{
+		return Auth.create(accessKey, secretKey);
+	}
+
+	private Configuration getCfg()
+	{
+		return new Configuration(Region.region0());
 	}
 }
