@@ -73,6 +73,30 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	}
 
 	@Override
+	public CommonResult remove(int id)
+	{
+		// 获得key
+		Clothes clothes = this.getById(id);
+		if (Objects.isNull(clothes))
+		{
+			return CommonResult.errorMsg("衣物不存在");
+		}
+		String url = clothes.getUrl();
+		String key = url.substring(url.lastIndexOf("clothes"));
+
+		// 删除文件
+		if (!qiniuOSS.delete(key))
+		{
+			return CommonResult.errorMsg("删除文件失败");
+		}
+
+		// 删除记录
+		this.removeById(id);
+
+		return CommonResult.successMsg("删除成功");
+	}
+
+	@Override
 	public CommonResult listByKind(int kind)
 	{
 		if (!Util.kindIsOk(kind))

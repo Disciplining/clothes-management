@@ -17,5 +17,7 @@ public interface IClothesService extends IService<Clothes>
 {
 	CommonResult save(ClotheSaveDto dto);
 
+	CommonResult remove(int id);
+
 	CommonResult listByKind(int kind);
 }
