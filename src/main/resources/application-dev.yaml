@@ -1,0 +1,8 @@
+server:
+    port: 8002
+
+qiuniuOSS:
+    access_key: kzdlPdSfFXp_Jgj32wlk5NcIr_Y171smSEyzYpX1
+    secret_key: SQ7MwgAQbsT1Sp-RwBFWyAK3m8vUU4fhCgvuEkIb
+    bucket_name: liyanxing-pic-server
+    domain: http://pic.liyanxing.top/
