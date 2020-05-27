@@ -1,20 +1,16 @@
 package com.lyx.config;
 
-import cn.hutool.core.io.file.FileReader;
-		import cn.hutool.core.util.IdUtil;
-		import com.alibaba.fastjson.JSONObject;
-import com.lyx.common.Util;
+import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
-		import com.qiniu.storage.Region;
-		import com.qiniu.storage.UploadManager;
-		import com.qiniu.util.Auth;
-		import org.springframework.beans.factory.annotation.Value;
-		import org.springframework.stereotype.Component;
-
-		import java.io.File;
+import com.qiniu.storage.Region;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.util.Auth;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component("qiniuOSS")
 public class QiniuOSS
@@ -36,13 +32,8 @@ public class QiniuOSS
 	 * @param pic 图片文件
 	 * @return 外链
 	 */
-	public String uploadClothesPic(File pic)
+	public String uploadClothesPic(byte[] pic)
 	{
-		if (!Util.isPicFile(pic))
-		{
-			throw new RuntimeException("文件不是图片");
-		}
-
 		String key = "clothes/" + IdUtil.simpleUUID();
 
 		return this.upload(pic, key);
@@ -53,12 +44,12 @@ public class QiniuOSS
 	 * @param key 文件在OSS中的key
 	 * @return 文件外链
 	 */
-	public String upload(File file, String key)
+	public String upload(byte[] file, String key)
 	{
 		try
 		{
 			UploadManager uploadManager = new UploadManager(this.getCfg());
-			Response res = uploadManager.put(new FileReader(file).readBytes(), key, this.getUploadToken());
+			Response res = uploadManager.put(file, key, this.getUploadToken());
 			return domain + JSONObject.parseObject(res.bodyString()).get("key");
 		}
 		catch (Exception e)

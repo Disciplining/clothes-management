@@ -1,6 +1,13 @@
 server:
     port: 8002
 
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://www.liyanxing.top:3306/clothes_management?serverTimezone=Asia/Shanghai
+        username: root
+        password: root123
+
 qiuniuOSS:
     access_key: kzdlPdSfFXp_Jgj32wlk5NcIr_Y171smSEyzYpX1
     secret_key: SQ7MwgAQbsT1Sp-RwBFWyAK3m8vUU4fhCgvuEkIb

@@ -1,9 +1,7 @@
 package com.lyx.common;
 
 import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import java.io.File;
 
 public class Util
 {
@@ -21,12 +19,13 @@ public class Util
 	}
 
 	/**
-	 * 判断文件是否是一个图片
+	 * 根据文件名，判断文件是否是一个图片
 	 * @return true-是图片 false-不是图片
 	 */
-	public static boolean isPicFile(File file)
+	public static boolean isPicFile(String fileName)
 	{
-		String type = getType(FileUtil.getName(file));
+		String type = getType(fileName);
+
 		if (StrUtil.isBlank(type))
 		{
 			return false;

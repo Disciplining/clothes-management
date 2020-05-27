@@ -1,8 +1,8 @@
 package com.lyx.process.mapper;
 
-import com.lyx.entity.Clothes;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.mapstruct.Mapper;
+import com.lyx.entity.Clothes;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**

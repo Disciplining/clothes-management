@@ -1,7 +1,9 @@
 package com.lyx.process.service;
 
-import com.lyx.entity.Clothes;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lyx.common.CommonResult;
+import com.lyx.dto.ClotheSaveDto;
+import com.lyx.entity.Clothes;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IClothesService extends IService<Clothes>
 {
+	CommonResult save(ClotheSaveDto dto);
 }
