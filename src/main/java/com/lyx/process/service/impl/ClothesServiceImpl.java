@@ -101,18 +101,13 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	}
 
 	@Override
-	public CommonResult listByKind(int kind)
+	public CommonResult listKind(int kind)
 	{
 		if (!CommonUtil.kindIsOk(kind))
 		{
 			return CommonResult.errorMsg("种类不正确");
 		}
-		List<Clothes> list = new LambdaQueryChainWrapper<>(this.baseMapper)
-								.eq(Clothes::getKind, kind)
-								.orderByAsc(Clothes::getSequence)
-								.list();
-
-		return CommonResult.successData(list);
+		return CommonResult.successData(this.listKindOrderBySequence(kind));
 	}
 
 	/**
@@ -129,5 +124,57 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 			return 0;
 		}
 		return list.get(list.size()-1).getSequence();
+	}
+
+	/**
+	 * 分类查询所有，按排序编号排序
+	 * @param kind
+	 * @return
+	 */
+	private List<Clothes> listKindOrderBySequence(int kind)
+	{
+		List<Clothes> list = new LambdaQueryChainWrapper<>(this.baseMapper)
+								.eq(Clothes::getKind, kind)
+								.orderByAsc(Clothes::getSequence)
+								.list();
+		return list;
+	}
+
+	/**
+	 * 上升一个衣物的排序
+	 */
+	public void upOneClothes(int id)
+	{
+		Clothes clothesInDown = this.getById(id); // 在下边的衣物 要上升排序的衣物
+		List<Clothes> allClotheKind = this.listKindOrderBySequence(clothesInDown.getKind());
+		int index = allClotheKind.indexOf(clothesInDown);
+		if (index == 0)
+		{
+			return;
+		}
+		Clothes clothesInUp = allClotheKind.get(index-1); // 在上边的衣物 要下降排序的衣物
+
+		clothesInDown.setSequence(clothesInUp.getSequence());
+		clothesInUp.setSequence(clothesInDown.getSequence()+1);
+
+		this.updateById(clothesInUp);
+		this.updateById(clothesInDown);
+	}
+
+	/**
+	 * 下降一个衣物的排序
+	 */
+	public void downOneClothes(int id)
+	{
+		Clothes clothesInUp = this.getById(id);
+		List<Clothes> allClotheKind = this.listKindOrderBySequence(clothesInUp.getKind());
+		int index = allClotheKind.indexOf(clothesInUp);
+		if (index == allClotheKind.size()-1)
+		{
+			return;
+		}
+		Clothes clothesInDown = allClotheKind.get(index + 1);
+
+		this.upOneClothes(clothesInDown.getCId());
 	}
 }

@@ -6,7 +6,6 @@ import com.lyx.dto.ClotheSaveDto;
 import com.lyx.process.service.IClothesService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,7 @@ public class ClothesController
 		return service.save(dto);
 	}
 
-	@Delete("/remove")
+	@DeleteMapping("/remove")
 	@ApiModelProperty("删除某个衣物")
 	public CommonResult remove(@RequestParam int id)
 	{
@@ -43,8 +42,8 @@ public class ClothesController
 
 	@GetMapping("/list/{kind}")
 	@ApiOperation("获得某类衣物")
-	public CommonResult listByKind(@PathVariable("kind") int kind)
+	public CommonResult listKind(@PathVariable("kind") int kind)
 	{
-		return service.listByKind(kind);
+		return service.listKind(kind);
 	}
 }

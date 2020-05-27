@@ -1,7 +1,7 @@
 package com.lyx;
 
 import com.lyx.config.QiniuOSS;
-import com.lyx.process.service.IClothesService;
+import com.lyx.process.service.impl.ClothesServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +16,7 @@ class AppTests
 
 	@Autowired
 	@Qualifier("clothesServiceImpl")
-	private IClothesService service;
+	private ClothesServiceImpl service;
 
 	@Test
 	void contextLoads()
@@ -32,5 +32,11 @@ class AppTests
 	public void test1()
 	{
 		System.out.println(service.remove(2));
+	}
+
+	@Test
+	public void test2()
+	{
+		service.downOneClothes(8);
 	}
 }

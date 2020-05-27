@@ -19,5 +19,5 @@ public interface IClothesService extends IService<Clothes>
 
 	CommonResult remove(int id);
 
-	CommonResult listByKind(int kind);
+	CommonResult listKind(int kind);
 }
