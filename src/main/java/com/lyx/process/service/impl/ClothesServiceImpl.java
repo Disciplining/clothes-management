@@ -143,7 +143,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	/**
 	 * 上升一个衣物的排序
 	 */
-	public void upOneClothes(int id)
+	private void upOneClothes(int id)
 	{
 		Clothes clothesInDown = this.getById(id); // 在下边的衣物 要上升排序的衣物
 		List<Clothes> allClotheKind = this.listKindOrderBySequence(clothesInDown.getKind());
@@ -164,7 +164,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	/**
 	 * 下降一个衣物的排序
 	 */
-	public void downOneClothes(int id)
+	private void downOneClothes(int id)
 	{
 		Clothes clothesInUp = this.getById(id);
 		List<Clothes> allClotheKind = this.listKindOrderBySequence(clothesInUp.getKind());
