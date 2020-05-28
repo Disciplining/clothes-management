@@ -43,6 +43,8 @@
         </div>
 
         <script>
+            var kind = window.location.href.split("=")[1];
+
             new Vue
             (
                 {
@@ -56,7 +58,7 @@
                         getClothes: function() // 获得所有衣物
                         {
                             let that = this;
-                            axios.get('/clothes/list/0')
+                            axios.get('/clothes/list/' + kind)
                                 .then
                                 (
                                     function (response)
