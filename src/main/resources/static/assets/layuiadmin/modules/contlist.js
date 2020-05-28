@@ -12,20 +12,17 @@ layui.define
         (
             {
                 elem: '#LAY-app-content-list',
-                url: layui.setter.base + 'json/content/list.js', //模拟接口
+                url: '/clothes/list/0', // 后台接口
                 cols:
                 [
                     [
                         {type: 'checkbox', fixed: 'left'},
-                        {field: 'id', width: 100, title: '文章ID', sort: true},
-                        {field: 'label', title: '文章标签', minWidth: 100},
-                        {field: 'title', title: '文章标题'},
-                        {field: 'author', title: '作者'},
-                        {field: 'uploadtime', title: '上传时间', sort: true},
+                        {field: 'cname', width: 100, title: '名称'},
+                        {title: '图片', templet: '#img'},
                         {title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}
                     ]
                 ],
-                page: true,
+                page: false,
                 limit: 10,
                 limits: [10, 15, 20, 25, 30],
                 text: '对不起，加载出现异常！'
