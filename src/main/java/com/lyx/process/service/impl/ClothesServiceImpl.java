@@ -101,6 +101,21 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	}
 
 	@Override
+	public CommonResult changeSequence(int id, boolean up)
+	{
+		if (up)
+		{
+			this.upOneClothes(id);
+		}
+		else
+		{
+			this.downOneClothes(id);
+		}
+
+		return CommonResult.successMsg("排序已更新");
+	}
+
+	@Override
 	public CommonResult listKind(int kind)
 	{
 		if (!CommonUtil.kindIsOk(kind))

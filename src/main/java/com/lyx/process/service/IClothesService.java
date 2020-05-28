@@ -19,5 +19,11 @@ public interface IClothesService extends IService<Clothes>
 
 	CommonResult remove(int id);
 
+	/**
+	 * 更改衣物的排序
+	 * @param up 这个衣物是否是上升
+	 */
+	CommonResult changeSequence(int id, boolean up);
+
 	CommonResult listKind(int kind);
 }

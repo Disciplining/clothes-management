@@ -37,6 +37,5 @@ class AppTests
 	@Test
 	public void test2()
 	{
-		service.downOneClothes(8);
 	}
 }

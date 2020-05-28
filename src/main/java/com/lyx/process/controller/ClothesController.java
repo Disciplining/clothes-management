@@ -33,11 +33,17 @@ public class ClothesController
 		return service.save(dto);
 	}
 
-	@DeleteMapping("/remove")
+	@DeleteMapping("/remove/{id}")
 	@ApiModelProperty("删除某个衣物")
-	public CommonResult remove(@RequestParam int id)
+	public CommonResult remove(@PathVariable("id") int id)
 	{
 		return service.remove(id);
+	}
+
+	@PutMapping("/sequence/{id}")
+	public CommonResult changeSequence(@PathVariable("id") int id, @RequestParam boolean up)
+	{
+		return service.changeSequence(id, up);
 	}
 
 	@GetMapping("/list/{kind}")
