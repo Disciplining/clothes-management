@@ -26,10 +26,6 @@
             <div class="layui-form-item">
 
                 <div class="layui-inline">
-                    <a href="#" class="layui-btn layui-btn-primary">添加一件上衣</a>
-                </div>
-
-                <div class="layui-inline">
                     <label class="layui-form-label">上衣总数</label>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="tel" class="layui-input" v-bind:value="count" readonly/>
@@ -47,9 +43,9 @@
                         <div class="cmdlist-text">
                             <p class="info">{{item.cname}}</p>
                             <div class="price">
-                                <a class="layui-btn layui-btn-danger" @click="delClothes(item.cid)">删除</a>
-                                <a class="layui-btn layui-btn-normal" @click="upClothes(item.cid)">前移</a>
-                                <a class="layui-btn layui-btn-normal" @click="downClothes(item.cid)">后移</a>
+                                <a class="layui-btn layui-btn-sm layui-btn-danger" @click="delClothes(item.cid)">删除</a>
+                                <a class="layui-btn layui-btn-sm layui-btn-normal" @click="upClothes(item.cid)">前移</a>
+                                <a class="layui-btn layui-btn-sm layui-btn-normal" @click="downClothes(item.cid)">后移</a>
                             </div>
                         </div>
                     </div>
