@@ -41,6 +41,7 @@ public class ClothesController
 	}
 
 	@PutMapping("/sequence/{id}")
+	@ApiModelProperty("修改衣物排序")
 	public CommonResult changeSequence(@PathVariable("id") int id, @RequestParam boolean up)
 	{
 		return service.changeSequence(id, up);

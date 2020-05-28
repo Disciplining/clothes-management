@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8">
         <meta name="renderer" content="webkit">
@@ -8,120 +8,122 @@
 
         <title>衣物列表</title>
 
-        <link rel="stylesheet" href="/assets/layuiadmin/layui/css/layui.css" media="all">
-        <link rel="stylesheet" href="/assets/layuiadmin/style/admin.css" media="all">
+        <link rel="stylesheet" href="/assets/clotheslist/layui.css" media="all">
+        <link rel="stylesheet" href="/assets/clotheslist/admin.css" media="all">
+        <link rel="stylesheet" href="/assets/clotheslist/template.css" media="all">
+        <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/axios/0.19.2/axios.min.js"></script>
+        <style>
+            div.price a
+            {
+                cursor: pointer;
+            }
+        </style>
     </head>
 
     <body>
+        <div class="layui-fluid layadmin-cmdlist-fluid" id="app">
+            <div class="layui-row layui-col-space30">
 
-        <div class="layui-fluid">
-            <div class="layui-card">
-                <div class="layui-card-body">
-                    <div style="padding-bottom: 10px;">
-                        <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
-                        <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
-                    </div>
-
-                    <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
-                    <script type="text/html" id="table-content-list">
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
-                    </script>
-                    <script type="text/html" id="img">
-                        <div>
-                            <img src="{{ d.url }}"/>
+                <div v-for="item in clothes" class="layui-col-md2 layui-col-sm4">
+                    <div class="cmdlist-container">
+                        <img v-bind:src=item.url>
+                        <div class="cmdlist-text">
+                            <p class="info">{{item.cname}}</p>
+                            <div class="price">
+                                <a @click="delClothes(item.cid)">删除</a>
+                                <a @click="upClothes(item.cid)">前移</a>
+                                <a @click="downClothes(item.cid)">后移</a>
+                            </div>
                         </div>
-                    </script>
+                    </div>
                 </div>
+
             </div>
         </div>
 
-        <script src="/assets/layuiadmin/layui/layui.js"></script>
         <script>
-            layui.config( {base: '/assets/layuiadmin/'} )
-                .extend({index: 'lib/index'})
-                .use
-                (
-                    ['index', 'contlist', 'table'],
-                    function()
+            new Vue
+            (
+                {
+                    el : '#app',
+                    data:
                     {
-                        var table = layui.table;
-                        var form = layui.form;
-
-                        //监听搜索
-                        form.on
-                        (
-                            'submit(LAY-app-contlist-search)',
-                            function(data)
-                            {
-                                var field = data.field;
-                                table.reload('LAY-app-content-list', {where: field}); //执行重载
-                            }
-                        );
-
-                        var $ = layui.$;
-                        var active =
+                        clothes: []
+                    },
+                    methods:
+                    {
+                        getClothes: function() // 获得所有衣物
                         {
-                            batchdel: function()
-                            {
-                                var checkStatus = table.checkStatus('LAY-app-content-list');
-                                var checkData = checkStatus.data; //得到选中的数据
-
-                                if(checkData.length === 0)
-                                {
-                                  return layer.msg('请选择数据');
-                                }
-
-                                layer.confirm
+                            let that = this;
+                            axios.get('/clothes/list/0')
+                                .then
                                 (
-                                    '确定删除吗？',
-                                    function(index)
+                                    function (response)
                                     {
-                                        //执行 Ajax 后重载
-                                        /*
-                                        admin.req({
-                                        url: 'xxx'
-                                        //,……
-                                        });
-                                        */
-                                        table.reload('LAY-app-content-list');
-                                        layer.msg('已删除');
+                                        that.clothes = response.data.data;
+                                    },
+                                    function ()
+                                    {
+                                        console.log('请求失败');
                                     }
                                 );
-                            },
-                            add: function()
-                            {
-                                layer.open
+                        },
+                        delClothes: function (cid) // 删除衣物
+                        {
+                            let that = this;
+                            axios.delete('/clothes/remove/' + cid)
+                                .then
                                 (
+                                    function (response)
                                     {
-                                        type: 2,
-                                        title: '添加文章',
-                                        content: 'listform.html',
-                                        maxmin: true,
-                                        area: ['550px', '550px'],
-                                        btn: ['确定', '取消'],
-                                        yes: function(index, layero)
-                                        {
-                                            //点击确认触发 iframe 内容中的按钮提交
-                                            var submit = layero.find('iframe').contents().find("#layuiadmin-app-form-submit");
-                                            submit.click();
-                                        }
+                                        that.getClothes();
+                                    },
+                                    function ()
+                                    {
+                                        alert('请求失败');
                                     }
                                 );
-                            }
-                        };
-
-                        $('.layui-btn.layuiadmin-btn-list').on
-                        (
-                            'click',
-                            function()
-                            {
-                                var type = $(this).data('type');
-                                active[type] ? active[type].call(this) : '';
-                            }
-                        );
+                        },
+                        upClothes: function (cid) // 前移一个衣物
+                        {
+                            let that = this;
+                            axios.put('/clothes/sequence/' + cid + "?up=true")
+                                .then
+                                (
+                                    function (response)
+                                    {
+                                        that.getClothes();
+                                    },
+                                    function ()
+                                    {
+                                        alert('请求失败');
+                                    }
+                                );
+                        },
+                        downClothes: function (cid) // 后移一个衣物
+                        {
+                            let that = this;
+                            axios.put('/clothes/sequence/' + cid + "?up=false")
+                                .then
+                                (
+                                    function (response)
+                                    {
+                                        that.getClothes();
+                                    },
+                                    function ()
+                                    {
+                                        alert('请求失败');
+                                    }
+                                );
+                        }
+                    },
+                    created: function ()
+                    {
+                        this.getClothes();
                     }
-                );
+                }
+            );
         </script>
     </body>
 </html>
