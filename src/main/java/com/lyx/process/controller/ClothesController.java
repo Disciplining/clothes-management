@@ -3,6 +3,7 @@ package com.lyx.process.controller;
 
 import com.lyx.common.CommonResult;
 import com.lyx.dto.ClotheSaveDto;
+import com.lyx.entity.Clothes;
 import com.lyx.process.service.IClothesService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -29,10 +32,31 @@ public class ClothesController
 
 	@PostMapping("/save/uploadpic")
 	@ApiModelProperty("增加衣物，上传图片")
-	public CommonResult saveUploadPic(@RequestParam("file") MultipartFile pic)
+	public CommonResult saveUploadPic(@RequestParam("file") MultipartFile pic, HttpServletResponse response)
 	{
-		return service.saveUploadPic(pic);
+		return service.saveUploadPic(pic, response);
 	}
+
+	@PostMapping("/save/form")
+	@ApiModelProperty("增加衣物，提交表单")
+	public CommonResult saveForm(@RequestBody Clothes clothes)
+	{
+		return service.saveForm(clothes);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

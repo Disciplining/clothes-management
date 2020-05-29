@@ -1,6 +1,7 @@
 package com.lyx.process.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.common.CommonResult;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,19 +36,29 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	private QiniuOSS qiniuOSS;
 
 	@Override
-	public CommonResult saveUploadPic(MultipartFile pic)
+	public CommonResult saveUploadPic(MultipartFile pic, HttpServletResponse response)
 	{
-		if (Objects.isNull(pic))
-			return CommonResult.errorMsg("请上传文件");
-		if (!CommonUtil.isPicFile(pic.getOriginalFilename()))
-			return CommonResult.errorMsg("上传的不是图片");
-
 		try
 		{
+			// 检查参数
+			if (Objects.isNull(pic))
+			{
+				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
+				return CommonResult.errorMsg("请上传文件");
+			}
+			if (!CommonUtil.isPicFile(pic.getOriginalFilename()))
+			{
+				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
+				return CommonResult.errorMsg("上传的不是图片");
+			}
+
 			// 上传文件
 			String url = qiniuOSS.uploadClothesPic(pic);
 			if (StrUtil.isBlank(url))
-				return CommonResult.errorMsg("文件上传失败");
+			{
+				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
+				return CommonResult.errorMsg("图片上传七牛云失败");
+			}
 
 			// 在数据库中生成记录
 			Clothes clothes = new Clothes();
@@ -54,15 +66,39 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 			clothes.setCName("temp");
 			clothes.setKind(-1);
 			clothes.setSequence(-1);
-
-			return this.save(clothes) ? CommonResult.successMsgData("图片上传成功", clothes.getCId()) : CommonResult.errorMsg("图片上传失败");
+			boolean saveResult = this.save(clothes);
+			if (saveResult)
+			{
+				return CommonResult.successMsgData("图片上传成功", clothes.getCId());
+			}
+			else
+			{
+				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
+				return CommonResult.errorMsg("数据库中生成记录失败");
+			}
 		}
 		catch (Exception e)
 		{
+			response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
 			System.out.println("添加衣物失败，错误信息：" + e.getMessage());
 			return CommonResult.errorMsg("添加衣物失败");
 		}
 	}
+
+	@Override
+	public CommonResult saveForm(Clothes clothes)
+	{
+		int sequence = this.getLastSequence(clothes.getKind()) + 1;
+		clothes.setSequence(sequence);
+
+		return this.updateById(clothes) ? CommonResult.success() : CommonResult.errorMsg("添加数据失败");
+	}
+
+
+
+
+
+
 
 	@Override
 	public CommonResult save(ClotheSaveDto dto)

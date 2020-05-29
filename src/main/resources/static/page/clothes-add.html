@@ -81,7 +81,10 @@
 
         <script src="/assets/layuiadmin/layui/layui.js"></script>
         <script>
+
             // 上传图片
+            var picUploadSuccess = false; // 图片上传成功标识位
+            var codeId = -1; // 图片上传后生成的记录id
             layui.config({base: '/assets/layuiadmin/'})
                 .extend({index: 'lib/index'})
                 .use
@@ -111,13 +114,14 @@
                                 },
                                 done: function(res) // 上传后回调
                                 {
-                                    console.log('返回数据：', res);
                                     if(res.code > 0)
                                     {
                                         return layer.msg('上传失败');
                                     }
                                     else
                                     {
+                                        picUploadSuccess = true;
+                                        codeId = res.data;
                                         return layer.msg(res.msg);
                                     }
                                 },
@@ -140,7 +144,7 @@
                     }
                 );
 
-            // 表单其他字段
+            // 提交表单
             layui.config({base: '/assets/layuiadmin/'})
             .extend({index: 'lib/index'})
             .use
@@ -159,16 +163,41 @@
                     form.on
                     (
                         'submit(component-form-element)',
-                        function(data)
+                        function(data) // 点击提交表单按钮
                         {
-                            if ($('#test-upload-normal-img').attr('src') === undefined)
+                            if (picUploadSuccess) // 图片上传成功
                             {
-                                layer.msg('请上传图片');
+                                var jsonData = data.field;
+                                delete jsonData.file;
+                                jsonData.cname = jsonData.cName;
+                                delete jsonData.cName;
+                                jsonData.cid = codeId;
+
+                                console.log('ajax提交');
+                                $.ajax
+                                (
+                                    {
+                                        url: '/clothes/save/form', //请求的url
+                                        type: 'POST', //以何种方法发送报文
+                                        dataType: 'json', //预期的服务器返回的数据类型
+                                        headers: {'Content-Type': 'application/json;charset=utf-8'},
+                                        data: JSON.stringify(jsonData),
+                                        success: function () // 成功跳转页面
+                                        {
+                                            layer.msg("提交成功");
+                                        },
+                                        error: function (res) // 失败显示提示
+                                        {
+                                            layer.msg("数据提交失败");
+                                        }
+                                    }
+                                )
                             }
                             else
                             {
-                                layer.msg('提交表单，跳转页面    ' + JSON.stringify(data.field));
+                                layer.msg('图片上传失败或未上传图片');
                             }
+
                             return false;
                         }
                     );

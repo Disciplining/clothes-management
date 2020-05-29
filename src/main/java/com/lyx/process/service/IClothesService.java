@@ -6,6 +6,8 @@ import com.lyx.dto.ClotheSaveDto;
 import com.lyx.entity.Clothes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * <p>
  * 衣物表 服务类
@@ -19,7 +21,12 @@ public interface IClothesService extends IService<Clothes>
 	/**
 	 * 增加衣物，上传照片
 	 */
-	CommonResult saveUploadPic(MultipartFile pic);
+	CommonResult saveUploadPic(MultipartFile pic, HttpServletResponse response);
+
+	/**
+	 * 增加衣物，提交表单
+	 */
+	CommonResult saveForm(Clothes clothes);
 
 	CommonResult save(ClotheSaveDto dto);
 

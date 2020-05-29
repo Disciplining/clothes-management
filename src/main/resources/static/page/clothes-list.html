@@ -26,7 +26,7 @@
             <div class="layui-form-item">
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">上衣总数</label>
+                    <label class="layui-form-label">{{ kindStr }}</label>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="tel" class="layui-input" v-bind:value="count" readonly/>
                     </div>
@@ -57,13 +57,14 @@
         <script>
             var kind = window.location.href.split("=")[1];
 
-            new Vue
+            var vue = new Vue
             (
                 {
                     el : '#app',
                     data:
                     {
                         clothes: [],
+                        kindStr: '',
                         count: 0
                     },
                     methods:
@@ -136,6 +137,22 @@
                     },
                     created: function ()
                     {
+                        if (kind == 0)
+                        {
+                            this.kindStr = "上衣总数：";
+                        }
+                        else if (kind == 1)
+                        {
+                            this.kindStr = "下衣总数：";
+                        }
+                        else if (kind == 2)
+                        {
+                            this.kindStr = "鞋子总数：";
+                        }
+                        else
+                        {
+                            this.kindStr = "衣物总数：";
+                        }
                         this.getClothes();
                     }
                 }
