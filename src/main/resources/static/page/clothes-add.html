@@ -173,7 +173,6 @@
                                 delete jsonData.cName;
                                 jsonData.cid = codeId;
 
-                                console.log('ajax提交');
                                 $.ajax
                                 (
                                     {
@@ -184,7 +183,7 @@
                                         data: JSON.stringify(jsonData),
                                         success: function () // 成功跳转页面
                                         {
-                                            layer.msg("提交成功");
+                                            window.location.href="/page/clothes-list.html?cid=" + jsonData.kind;
                                         },
                                         error: function (res) // 失败显示提示
                                         {
