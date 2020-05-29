@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.common.CommonResult;
 import com.lyx.common.CommonUtil;
 import com.lyx.config.QiniuOSS;
-import com.lyx.dto.ClotheSaveDto;
 import com.lyx.entity.Clothes;
 import com.lyx.process.mapper.ClothesMapper;
 import com.lyx.process.service.IClothesService;
@@ -94,56 +93,6 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		return this.updateById(clothes) ? CommonResult.success() : CommonResult.errorMsg("添加数据失败");
 	}
 
-
-
-
-
-
-
-	@Override
-	public CommonResult save(ClotheSaveDto dto)
-	{
-		if (StrUtil.isBlank(dto.getCName()))
-		{
-			return CommonResult.errorMsg("名称不能为空");
-		}
-		if (!CommonUtil.kindIsOk(dto.getKind()))
-		{
-			return CommonResult.errorMsg("种类不正确");
-		}
-		if (Objects.isNull(dto.getFile()))
-		{
-			return CommonResult.errorMsg("请上传文件");
-		}
-		if (!CommonUtil.isPicFile(dto.getFile().getOriginalFilename()))
-		{
-			return CommonResult.errorMsg("上传的不是图片");
-		}
-
-		try
-		{
-			String url = qiniuOSS.uploadClothesPic(dto.getFile());
-			if (StrUtil.isBlank(url))
-			{
-				return CommonResult.errorMsg("文件上传失败");
-			}
-			int sequence = this.getLastSequence(dto.getKind()) + 1;
-
-			Clothes clothes = new Clothes();
-			clothes.setCName(dto.getCName());
-			clothes.setKind(dto.getKind());
-			clothes.setUrl(url);
-			clothes.setSequence(sequence);
-
-			return this.save(clothes) ? CommonResult.successMsg("添加成功") : CommonResult.errorMsg("添加失败");
-		}
-		catch (Exception e)
-		{
-			System.out.println("添加衣物失败，错误信息：" + e.getMessage());
-			return CommonResult.errorMsg("添加衣物失败");
-		}
-	}
-
 	@Override
 	public CommonResult remove(int id)
 	{
@@ -192,6 +141,8 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		}
 		return CommonResult.successData(this.listKindOrderBySequence(kind));
 	}
+
+	// ------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * 获得某一类的最大排序编号

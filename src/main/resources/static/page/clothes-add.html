@@ -69,6 +69,7 @@
                                     <div class="layui-input-block">
                                         <button class="layui-btn" lay-submit lay-filter="component-form-element">立即提交</button>
                                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                        <a id="cancel" class="layui-btn layui-btn-primary">取消上传</a>
                                     </div>
                                 </div>
                             </form>
@@ -80,6 +81,7 @@
 
 
         <script src="/assets/layuiadmin/layui/layui.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
 
             // 上传图片
@@ -200,6 +202,31 @@
                             return false;
                         }
                     );
+                }
+            );
+
+            // 取消上传
+            $('#cancel').click
+            (
+                function ()
+                {
+                    $.ajax
+                    (
+                        {
+                            url: '/clothes/remove/' + codeId,
+                            type: 'DELETE',
+                            dataType: 'json',
+                            success: function ()
+                            {
+                                window.close();
+                                // window.location.href="/";
+                            },
+                            error: function ()
+                            {
+                                layer.msg("取消失败");
+                            }
+                        }
+                    )
                 }
             );
         </script>

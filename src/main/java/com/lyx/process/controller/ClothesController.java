@@ -2,7 +2,6 @@ package com.lyx.process.controller;
 
 
 import com.lyx.common.CommonResult;
-import com.lyx.dto.ClotheSaveDto;
 import com.lyx.entity.Clothes;
 import com.lyx.process.service.IClothesService;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,36 +41,6 @@ public class ClothesController
 	public CommonResult saveForm(@RequestBody Clothes clothes)
 	{
 		return service.saveForm(clothes);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	@PostMapping("/save")
-	@ApiOperation("添加一件衣物")
-	public CommonResult save(ClotheSaveDto dto)
-	{
-		return service.save(dto);
 	}
 
 	@DeleteMapping("/remove/{id}")
