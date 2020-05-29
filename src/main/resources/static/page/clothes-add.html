@@ -97,7 +97,7 @@
                         (
                             {
                                 elem: '#test-upload-normal',
-                                url: '/upload/',
+                                url: '/clothes/save/uploadpic',
                                 before: function(obj)
                                 {
                                     //预读本地文件示例，不支持ie8
@@ -109,11 +109,16 @@
                                         }
                                     );
                                 },
-                                done: function(res)
+                                done: function(res) // 上传后回调
                                 {
+                                    console.log('返回数据：', res);
                                     if(res.code > 0)
                                     {
                                         return layer.msg('上传失败');
+                                    }
+                                    else
+                                    {
+                                        return layer.msg(res.msg);
                                     }
                                 },
                                 error: function()

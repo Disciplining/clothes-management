@@ -13,6 +13,7 @@ import com.lyx.process.service.IClothesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,37 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	@Autowired
 	@Qualifier("qiniuOSS")
 	private QiniuOSS qiniuOSS;
+
+	@Override
+	public CommonResult saveUploadPic(MultipartFile pic)
+	{
+		if (Objects.isNull(pic))
+			return CommonResult.errorMsg("请上传文件");
+		if (!CommonUtil.isPicFile(pic.getOriginalFilename()))
+			return CommonResult.errorMsg("上传的不是图片");
+
+		try
+		{
+			// 上传文件
+			String url = qiniuOSS.uploadClothesPic(pic);
+			if (StrUtil.isBlank(url))
+				return CommonResult.errorMsg("文件上传失败");
+
+			// 在数据库中生成记录
+			Clothes clothes = new Clothes();
+			clothes.setUrl(url);
+			clothes.setCName("temp");
+			clothes.setKind(-1);
+			clothes.setSequence(-1);
+
+			return this.save(clothes) ? CommonResult.successMsgData("图片上传成功", clothes.getCId()) : CommonResult.errorMsg("图片上传失败");
+		}
+		catch (Exception e)
+		{
+			System.out.println("添加衣物失败，错误信息：" + e.getMessage());
+			return CommonResult.errorMsg("添加衣物失败");
+		}
+	}
 
 	@Override
 	public CommonResult save(ClotheSaveDto dto)

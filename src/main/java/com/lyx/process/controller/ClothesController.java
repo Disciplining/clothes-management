@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -25,6 +26,22 @@ public class ClothesController
 	@Autowired
 	@Qualifier("clothesServiceImpl")
 	private IClothesService service;
+
+	@PostMapping("/save/uploadpic")
+	@ApiModelProperty("增加衣物，上传图片")
+	public CommonResult saveUploadPic(@RequestParam("file") MultipartFile pic)
+	{
+		return service.saveUploadPic(pic);
+	}
+
+
+
+
+
+
+
+
+
 
 	@PostMapping("/save")
 	@ApiOperation("添加一件衣物")
