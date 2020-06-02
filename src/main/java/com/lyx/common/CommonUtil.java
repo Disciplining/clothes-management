@@ -25,29 +25,23 @@ public class CommonUtil
 	public static boolean isPicFile(String fileName)
 	{
 		String type = getType(fileName);
-
 		if (StrUtil.isBlank(type))
-		{
 			return false;
-		}
 
-		switch (type)
-		{
-			case ImgUtil.IMAGE_TYPE_GIF:
-				return true;
-			case ImgUtil.IMAGE_TYPE_JPG:
-				return true;
-			case ImgUtil.IMAGE_TYPE_JPEG:
-				return true;
-			case ImgUtil.IMAGE_TYPE_BMP:
-				return true;
-			case ImgUtil.IMAGE_TYPE_PNG:
-				return true;
-			case ImgUtil.IMAGE_TYPE_PSD:
-				return true;
-			default:
-				return false;
-		}
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_GIF))
+			return true;
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_JPG))
+			return true;
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_JPEG))
+			return true;
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_BMP))
+			return true;
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_PNG))
+			return true;
+		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_PSD))
+			return true;
+
+		return false;
 	}
 
 	/**
