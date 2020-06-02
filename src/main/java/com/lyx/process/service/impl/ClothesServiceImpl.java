@@ -87,6 +87,11 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	@Override
 	public CommonResult saveForm(Clothes clothes)
 	{
+		if (Objects.isNull(clothes.getKind()))
+			return CommonResult.errorMsg("必须上传衣物种类");
+		if (CommonUtil.kindIsOk(clothes.getKind()))
+			return CommonResult.errorMsg("上传的衣物种类不正确");
+
 		int sequence = this.getLastSequence(clothes.getKind()) + 1;
 		clothes.setSequence(sequence);
 
