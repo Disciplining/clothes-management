@@ -1,233 +1,121 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="renderer" content="webkit">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<html lang="zxx">
 
+    <head>
         <title>添加一件衣物</title>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <link rel="stylesheet" href="/assets/layuiadmin/layui/css/layui.css" media="all">
-        <link rel="stylesheet" href="/assets/layuiadmin/layui/css/layui.css" media="all">
-        <link rel="stylesheet" href="/assets/layuiadmin/style/admin.css" media="all">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta name="keywords" content="Key Login Form a Responsive Web Template, Bootstrap Web Templates, Flat Web Templates, Android Compatible Web Template, Smartphone Compatible Web Template, Free Webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola Web Design">
+
+        <script>
+            addEventListener("load", function () {setTimeout(hideURLbar, 0);}, false);
+            function hideURLbar() {window.scrollTo(0, 1);}
+        </script>
+        <script src="/assets/clothesadd/jquery-3.5.1.min.js"></script>
+
+        <link rel="stylesheet" href="/assets/clothesadd/style.css" type="text/css" media="all">
+        <link rel="stylesheet" href="/assets/clothesadd/font-awesome.min.css" type="text/css" media="all">
 
         <style>
-            .layui-upload-img
+            div.field-group
             {
-                width: 92px; height: 92px; margin: 0 10px 10px 0;
+                color: white;
             }
         </style>
     </head>
 
     <body>
+        <section class="main">
+            <div class="layer">
+                <div class="content-w3ls">
+                    <div class="content-bottom">
+                        <form action="#" id="my-form">
 
-        <div class="layui-fluid">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md6">
-                    <div class="layui-card">
-                        <div class="layui-card-header">添加一件衣物</div>
-                        <div class="layui-card-body">
-                            <form class="layui-form" action="" lay-filter="component-form-element">
-                                <div class="layui-fluid">
-                                    <div class="layui-row layui-col-space15">
-                                        <div class="layui-col-md12">
-                                            <div class="layui-card">
-                                                <div class="layui-card-body">
-                                                    <div class="layui-upload">
-                                                        <button type="button" class="layui-btn" id="test-upload-normal">上传图片</button>
-                                                        <div class="layui-upload-list">
-                                                            <img class="layui-upload-img" id="test-upload-normal-img"/>
-                                                            <p id="test-upload-demoText"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="field-group">
+                                <div class="wthree-field">
+                                    <input name="cName" type="text" placeholder="衣物名称"/>
                                 </div>
+                            </div>
 
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">衣物种类：</label>
-                                    <div class="layui-input-block">
-                                        <input type="radio" name="kind" value="0" title="上衣" lay-verify="required" />
-                                        <input type="radio" name="kind" value="1" title="下衣" />
-                                        <input type="radio" name="kind" value="2" title="鞋子" />
-                                    </div>
+                            <div class="field-group">
+                                <div class="wthree-field">
+                                    <input name="picFile" type="file"/>
                                 </div>
+                            </div>
 
-                                <div class="layui-row layui-col-space10 layui-form-item">
-                                    <div class="layui-col-lg6">
-                                        <label class="layui-form-label">衣物名称：</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="cName" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="field-group">
+                                <input name="kind" type="radio" value="0"/>上衣
+                                <input name="kind" type="radio" value="1"/>下衣
+                                <input name="kind" type="radio" value="2"/>鞋子
+                            </div>
 
-                                <div class="layui-form-item">
-                                    <div class="layui-input-block">
-                                        <button class="layui-btn" lay-submit lay-filter="component-form-element">立即提交</button>
-                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                        <a id="cancel" class="layui-btn layui-btn-primary">取消上传</a>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                            <div class="wthree-field">
+                                <button id="sub" type="submit" class="btn">提交</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <script src="/assets/layuiadmin/layui/layui.js"></script>
-        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
+            $('#sub').click
+            (
+                function(event)
+                {
+                    event.preventDefault();
+                    sendData();
+                }
+            );
 
-            // 上传图片
-            var picUploadSuccess = false; // 图片上传成功标识位
-            var codeId = -1; // 图片上传后生成的记录id
-            layui.config({base: '/assets/layuiadmin/'})
-                .extend({index: 'lib/index'})
-                .use
+            // 发送数据
+            function sendData()
+            {
+                if($('input[name=cName]').val() === '')
+                {
+                    alert('衣物名称不能为空');
+                    return;
+                }
+
+                if($('input[name=picFile]').val() === '')
+                {
+                    alert('必须要上传衣物图片');
+                    return;
+                }
+
+                if($('input[name="kind"]:checked').val() === undefined)
+                {
+                    alert('文件类型不能为空');
+                    return;
+                }
+
+                // 组建要发送的数据
+                var formdata = new FormData();
+                formdata.append('cName', $('input[name=cName]').val());
+                formdata.append('kind', $('input[name=kind]').val());
+                formdata.append('picFile', $('input[name=picFile]')[0].files[0]);
+
+                $.ajax
                 (
-                    ['index', 'upload'],
-                    function()
                     {
-                        var $ = layui.jquery;
-                        var upload = layui.upload;
-
-                        //普通图片上传
-                        var uploadInst = upload.render
-                        (
-                            {
-                                elem: '#test-upload-normal',
-                                url: '/clothes/save/uploadpic',
-                                before: function(obj)
-                                {
-                                    //预读本地文件示例，不支持ie8
-                                    obj.preview
-                                    (
-                                        function(index, file, result)
-                                        {
-                                            $('#test-upload-normal-img').attr('src', result);
-                                        }
-                                    );
-                                },
-                                done: function(res) // 上传后回调
-                                {
-                                    if(res.code > 0)
-                                    {
-                                        return layer.msg('上传失败');
-                                    }
-                                    else
-                                    {
-                                        picUploadSuccess = true;
-                                        codeId = res.data;
-                                        return layer.msg(res.msg);
-                                    }
-                                },
-                                error: function()
-                                {
-                                    var demoText = $('#test-upload-demoText');
-                                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
-                                    demoText.find('.demo-reload')
-                                            .on
-                                            (
-                                                'click',
-                                                function()
-                                                {
-                                                    uploadInst.upload();
-                                                }
-                                            );
-                                }
-                            }
-                        );
+                        url:'/test',
+                        type:'POST', // 使用POS方式发送
+                        processData: false, // 告诉jQuery不要去处理发送的数据
+                        contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                        data:formdata,
+                        success: function ()
+                        {
+                            window.location.href="/page/clothes-list.html?cid=" + $('input[name="kind"]:checked').val();
+                        },
+                        error: function (res)
+                        {
+                            console.log("请求失败", res);
+                        }
                     }
-                );
-
-            // 提交表单
-            layui.config({base: '/assets/layuiadmin/'})
-            .extend({index: 'lib/index'})
-            .use
-            (
-                ['index', 'form'],
-                function()
-                {
-                    var $ = layui.$;
-                    var admin = layui.admin;
-                    var element = layui.element;
-                    var form = layui.form;
-
-                    form.render(null, 'component-form-element');
-                    element.render('breadcrumb', 'breadcrumb');
-
-                    form.on
-                    (
-                        'submit(component-form-element)',
-                        function(data) // 点击提交表单按钮
-                        {
-                            if (picUploadSuccess) // 图片上传成功
-                            {
-                                var jsonData = data.field;
-                                delete jsonData.file;
-                                jsonData.cname = jsonData.cName;
-                                delete jsonData.cName;
-                                jsonData.cid = codeId;
-
-                                $.ajax
-                                (
-                                    {
-                                        url: '/clothes/save/form', //请求的url
-                                        type: 'POST', //以何种方法发送报文
-                                        dataType: 'json', //预期的服务器返回的数据类型
-                                        headers: {'Content-Type': 'application/json;charset=utf-8'},
-                                        data: JSON.stringify(jsonData),
-                                        success: function () // 成功跳转页面
-                                        {
-                                            window.location.href="/page/clothes-list.html?cid=" + jsonData.kind;
-                                        },
-                                        error: function (res) // 失败显示提示
-                                        {
-                                            layer.msg("数据提交失败");
-                                        }
-                                    }
-                                )
-                            }
-                            else
-                            {
-                                layer.msg('图片上传失败或未上传图片');
-                            }
-
-                            return false;
-                        }
-                    );
-                }
-            );
-
-            // 取消上传
-            $('#cancel').click
-            (
-                function ()
-                {
-                    $.ajax
-                    (
-                        {
-                            url: '/clothes/remove/' + codeId,
-                            type: 'DELETE',
-                            dataType: 'json',
-                            success: function ()
-                            {
-                                window.close();
-                                // window.location.href="/";
-                            },
-                            error: function ()
-                            {
-                                layer.msg("取消失败");
-                            }
-                        }
-                    )
-                }
-            );
+                )
+            }
         </script>
     </body>
+
 </html>
