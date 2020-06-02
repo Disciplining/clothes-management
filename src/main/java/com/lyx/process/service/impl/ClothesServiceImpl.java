@@ -62,7 +62,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 			clothes.setCName(dto.getCName());
 			clothes.setKind(dto.getKind());
 			clothes.setUrl(url);
-			clothes.setSequence(this.getLastSequence(clothes.getKind()) + 1);
+			clothes.setSequence(this.getFirstOrSequence(clothes.getKind(), false) + 1);
 
 			return this.save(clothes) ? CommonResult.success() : CommonResult.errorMsg("添加数据失败");
 		}
@@ -111,6 +111,20 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 		return CommonResult.successMsg("排序已更新");
 	}
 
+	public CommonResult changeSequenceFirstOrLast(int id, boolean isFirst)
+	{
+		Clothes clothes = this.getById(id);
+		int sequence = this.getFirstOrSequence(clothes.getKind(),isFirst);
+
+		if (isFirst)
+			clothes.setSequence(sequence-1);
+		else
+			clothes.setSequence(sequence+1);
+
+		this.updateById(clothes);
+		return CommonResult.success();
+	}
+
 	@Override
 	public CommonResult listKind(int kind)
 	{
@@ -124,19 +138,22 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	// ------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * 获得某一类的最大排序编号
+	 * 获得某一类的最小或最大排序编号
+	 * @param isFirst 是否获得第一个 true-获得第一个 false-获得最后一个
 	 */
-	private int getLastSequence(int kind)
+	private int getFirstOrSequence(int kind, boolean isFirst)
 	{
 		List<Clothes> list = new LambdaQueryChainWrapper<>(this.baseMapper)
 								.eq(Clothes::getKind, kind)
 								.orderBy(true, true, Clothes::getSequence)
 								.list();
 		if (list.isEmpty())
-		{
 			return 0;
-		}
-		return list.get(list.size()-1).getSequence();
+
+		if (isFirst)
+			return list.get(0).getSequence();
+		else
+			return list.get(list.size()-1).getSequence();
 	}
 
 	/**

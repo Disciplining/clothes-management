@@ -47,6 +47,13 @@ public class ClothesController
 		return service.changeSequence(id, up);
 	}
 
+	@PutMapping("/sequence-fol/{id}")
+	@ApiModelProperty("修改衣物排序")
+	public CommonResult changeSequenceFirstOrLast(@PathVariable("id") int id, @RequestParam boolean isFirst)
+	{
+		return service.changeSequenceFirstOrLast(id, isFirst);
+	}
+
 	@GetMapping("/list/{kind}")
 	@ApiOperation("获得某类衣物")
 	public CommonResult listKind(@PathVariable("kind") int kind)

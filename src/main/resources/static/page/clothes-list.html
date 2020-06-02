@@ -34,7 +34,6 @@
 
             </div>
 
-
             <div class="layui-row layui-col-space30">
 
                 <div v-for="item in clothes" class="layui-col-md2 layui-col-sm4">
@@ -43,9 +42,34 @@
                         <div class="cmdlist-text">
                             <p class="info">{{item.cname}}</p>
                             <div class="price">
-                                <a class="layui-btn layui-btn-sm layui-btn-danger" @click="delClothes(item.cid)">删除</a>
-                                <a class="layui-btn layui-btn-sm layui-btn-normal" @click="upClothes(item.cid)">前移</a>
-                                <a class="layui-btn layui-btn-sm layui-btn-normal" @click="downClothes(item.cid)">后移</a>
+                                <!-- 前移 -->
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" @click="upClothes(item.cid)">
+                                    <i class="layui-icon layui-icon-left"></i>
+                                </button>
+
+                                <!-- 后移 -->
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" @click="downClothes(item.cid)">
+                                    <i class="layui-icon layui-icon-right"></i>
+                                </button>
+
+                                <!-- 移到最前 -->
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" @click="toFirst(item.cid)">
+                                    <i class="layui-icon layui-icon-prev"></i>
+                                </button>
+
+                                <!-- 移到最后 -->
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" @click="toLast(item.cid)">
+                                    <i class="layui-icon layui-icon-next"></i>
+                                </button>
+                            </div>
+
+                            <br/>
+
+                            <div class="price">
+                                <!-- 删除 -->
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" @click="delClothes(item.cid)">
+                                    <i class="layui-icon layui-icon-delete"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -133,7 +157,39 @@
                                         alert('请求失败');
                                     }
                                 );
-                        }
+                        },
+                        toFirst: function (cid) // 移到最前
+                        {
+                            let that = this;
+                            axios.put('/clothes/sequence-fol/' + cid + "?isFirst=true")
+                                .then
+                                (
+                                    function (response)
+                                    {
+                                        that.getClothes();
+                                    },
+                                    function ()
+                                    {
+                                        alert('请求失败');
+                                    }
+                                );
+                        },
+                        toLast: function (cid) // 移到最后
+                        {
+                            let that = this;
+                            axios.put('/clothes/sequence-fol/' + cid + "?isFirst=false")
+                                .then
+                                (
+                                    function (response)
+                                    {
+                                        that.getClothes();
+                                    },
+                                    function ()
+                                    {
+                                        alert('请求失败');
+                                    }
+                                );
+                        },
                     },
                     created: function ()
                     {

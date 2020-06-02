@@ -25,5 +25,11 @@ public interface IClothesService extends IService<Clothes>
 	 */
 	CommonResult changeSequence(int id, boolean up);
 
+	/**
+	 * 将衣物移到最前或最后
+	 * @param isFirst true-移到最前 false-移到最后
+	 */
+	CommonResult changeSequenceFirstOrLast(int id, boolean isFirst);
+
 	CommonResult listKind(int kind);
 }
