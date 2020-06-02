@@ -99,18 +99,26 @@
                 $.ajax
                 (
                     {
-                        url:'/test',
+                        url:'/clothes/save',
                         type:'POST', // 使用POS方式发送
                         processData: false, // 告诉jQuery不要去处理发送的数据
                         contentType: false, // 告诉jQuery不要去设置Content-Type请求头
                         data:formdata,
-                        success: function ()
+                        success: function (res)
                         {
-                            window.location.href="/page/clothes-list.html?cid=" + $('input[name="kind"]:checked').val();
+                            if (res.success)
+                            {
+                                alert('跳转页面');
+                                // window.location.href="/page/clothes-list.html?cid=" + $('input[name="kind"]:checked').val();
+                            }
+                            else
+                            {
+                                alert(res.msg);
+                            }
                         },
                         error: function (res)
                         {
-                            console.log("请求失败", res);
+                            alert(res.msg);
                         }
                     }
                 )

@@ -1,21 +1,21 @@
 package com.lyx.process.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.common.CommonResult;
 import com.lyx.common.CommonUtil;
 import com.lyx.config.QiniuOSS;
+import com.lyx.dto.ClothesSaveDto;
 import com.lyx.entity.Clothes;
 import com.lyx.process.mapper.ClothesMapper;
 import com.lyx.process.service.IClothesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,67 +35,41 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	private QiniuOSS qiniuOSS;
 
 	@Override
-	public CommonResult saveUploadPic(MultipartFile pic, HttpServletResponse response)
+	public CommonResult uploadClothes(ClothesSaveDto dto)
 	{
 		try
 		{
 			// 检查参数
-			if (Objects.isNull(pic))
-			{
-				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
-				return CommonResult.errorMsg("请上传文件");
-			}
-			if (!CommonUtil.isPicFile(pic.getOriginalFilename()))
-			{
-				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
+			if (StrUtil.isBlank(dto.getCName()))
+				return CommonResult.errorMsg("衣物名称不能为空");
+			if (Objects.isNull(dto.getKind()) || !CommonUtil.kindIsOk(dto.getKind()))
+				return CommonResult.errorMsg("衣物类型不正确");
+			if (Objects.isNull(dto.getPicFile()))
+				return CommonResult.errorMsg("必须上传衣物图片");
+			if (!CommonUtil.isPicFile(dto.getPicFile().getOriginalFilename()))
 				return CommonResult.errorMsg("上传的不是图片");
-			}
+			BufferedImage bufferedImage = ImageIO.read(dto.getPicFile().getInputStream());
+			if (bufferedImage.getWidth()!=430 || bufferedImage.getWidth()!=430)
+				return CommonResult.errorMsg("衣物图片的大小必须为 430x430");
 
-			// 上传文件
-			String url = qiniuOSS.uploadClothesPic(pic);
+			// 上传图片到OSS
+			String url = qiniuOSS.uploadClothesPic(dto.getPicFile());
 			if (StrUtil.isBlank(url))
-			{
-				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
-				return CommonResult.errorMsg("图片上传七牛云失败");
-			}
+				return CommonResult.errorMsg("图片上传失败");
 
 			// 在数据库中生成记录
 			Clothes clothes = new Clothes();
+			clothes.setCName(dto.getCName());
+			clothes.setKind(dto.getKind());
 			clothes.setUrl(url);
-			clothes.setCName("temp");
-			clothes.setKind(-1);
-			clothes.setSequence(-1);
-			boolean saveResult = this.save(clothes);
-			if (saveResult)
-			{
-				return CommonResult.successMsgData("图片上传成功", clothes.getCId());
-			}
-			else
-			{
-				response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
-				return CommonResult.errorMsg("数据库中生成记录失败");
-			}
+			clothes.setSequence(this.getLastSequence(clothes.getKind()) + 1);
+
+			return this.save(clothes) ? CommonResult.success() : CommonResult.errorMsg("添加数据失败");
 		}
 		catch (Exception e)
 		{
-			response.setStatus(HttpStatus.HTTP_INTERNAL_ERROR);
-			System.out.println("添加衣物失败，错误信息：" + e.getMessage());
-			return CommonResult.errorMsg("添加衣物失败");
+			return CommonResult.errorMsg("发生异常：" + e.getMessage());
 		}
-	}
-
-	@Override
-	public CommonResult saveForm(Clothes clothes)
-	{
-		if (Objects.isNull(clothes.getKind()))
-			return CommonResult.errorMsg("必须上传衣物种类");
-		if (CommonUtil.kindIsOk(clothes.getKind()))
-			return CommonResult.errorMsg("上传的衣物种类不正确");
-
-		int sequence = this.getLastSequence(clothes.getKind()) + 1;
-		clothes.setSequence(sequence);
-
-		return this.updateById(clothes) ? CommonResult.success() : CommonResult.errorMsg("添加数据失败");
 	}
 
 	@Override

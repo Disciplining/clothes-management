@@ -4,9 +4,9 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class ClotheSaveDto
+public class ClothesSaveDto
 {
 	private String cName;
 	private int kind;
-	private MultipartFile file;
+	private MultipartFile picFile;
 }

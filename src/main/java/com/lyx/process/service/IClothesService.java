@@ -2,10 +2,8 @@ package com.lyx.process.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyx.common.CommonResult;
+import com.lyx.dto.ClothesSaveDto;
 import com.lyx.entity.Clothes;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -17,15 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface IClothesService extends IService<Clothes>
 {
-	/**
-	 * 增加衣物，上传照片
-	 */
-	CommonResult saveUploadPic(MultipartFile pic, HttpServletResponse response);
-
-	/**
-	 * 增加衣物，提交表单
-	 */
-	CommonResult saveForm(Clothes clothes);
+	CommonResult uploadClothes(ClothesSaveDto dto);
 
 	CommonResult remove(int id);
 

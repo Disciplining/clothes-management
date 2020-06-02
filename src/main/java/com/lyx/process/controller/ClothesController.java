@@ -2,16 +2,13 @@ package com.lyx.process.controller;
 
 
 import com.lyx.common.CommonResult;
-import com.lyx.entity.Clothes;
+import com.lyx.dto.ClothesSaveDto;
 import com.lyx.process.service.IClothesService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -29,18 +26,11 @@ public class ClothesController
 	@Qualifier("clothesServiceImpl")
 	private IClothesService service;
 
-	@PostMapping("/save/uploadpic")
-	@ApiModelProperty("增加衣物，上传图片")
-	public CommonResult saveUploadPic(@RequestParam("file") MultipartFile pic, HttpServletResponse response)
+	@PostMapping("/save")
+	@ApiModelProperty("增加衣物")
+	public CommonResult uploadClothes(ClothesSaveDto dto)
 	{
-		return service.saveUploadPic(pic, response);
-	}
-
-	@PostMapping("/save/form")
-	@ApiModelProperty("增加衣物，提交表单")
-	public CommonResult saveForm(@RequestBody Clothes clothes)
-	{
-		return service.saveForm(clothes);
+		return service.uploadClothes(dto);
 	}
 
 	@DeleteMapping("/remove/{id}")
