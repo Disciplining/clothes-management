@@ -12,6 +12,7 @@ import com.lyx.process.mapper.ClothesMapper;
 import com.lyx.process.service.IClothesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -34,6 +35,9 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	@Qualifier("qiniuOSS")
 	private QiniuOSS qiniuOSS;
 
+	@Value("${clothes-pic-max-size-mb}")
+	private double picMaxSize;
+
 	@Override
 	public CommonResult uploadClothes(ClothesSaveDto dto)
 	{
@@ -50,7 +54,9 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 				return CommonResult.errorMsg("上传的不是图片");
 			BufferedImage bufferedImage = ImageIO.read(dto.getPicFile().getInputStream());
 			if (bufferedImage.getWidth()!=430 || bufferedImage.getWidth()!=430)
-				return CommonResult.errorMsg("衣物图片的大小必须为 430x430");
+				return CommonResult.errorMsg("衣物图片的尺寸必须为 430px*430px");
+			if (CommonUtil.fileSize(dto.getPicFile()) > this.picMaxSize)
+				return CommonResult.errorMsg("衣物图片的大小最大为 " + this.picMaxSize + "MB");
 
 			// 上传图片到OSS
 			String url = qiniuOSS.uploadClothesPic(dto.getPicFile(), dto.getKind());

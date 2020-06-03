@@ -2,6 +2,7 @@ package com.lyx.common;
 
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 public class CommonUtil
 {
@@ -40,6 +41,27 @@ public class CommonUtil
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * 计算 MultipartFile 类型文件的大小
+	 * @return 文件大小，单位是 MB
+	 */
+	public static double fileSize(MultipartFile file)
+	{
+		try
+		{
+			byte[] bytes = file.getBytes();
+			double size = bytes.length / (1024.0D*1024.0D);
+
+			return size;
+		}
+		catch (Exception e)
+		{
+			System.out.println("出现异常：" + e.getMessage());
+
+			return 0D;
+		}
 	}
 
 	/**

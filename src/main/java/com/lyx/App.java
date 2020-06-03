@@ -18,13 +18,14 @@ public class App
 
 	/**
 	 * 设置上传文件的大小限制
+	 * 这里设置成很大，再在业务层中控制
 	 */
 	@Bean("getMultipartConfigElement")
 	public MultipartConfigElement getMultipartConfigElement()
 	{
 		MultipartConfigFactory factory = new MultipartConfigFactory();
-		factory.setMaxFileSize(DataSize.ofMegabytes(20L)); // 单个文件最大20M
-		factory.setMaxRequestSize(DataSize.ofGigabytes(1L)); // 设置总上传数据总大小1G
+		factory.setMaxFileSize(DataSize.ofGigabytes(20L)); // 单个文件最大20G
+		factory.setMaxRequestSize(DataSize.ofGigabytes(100L)); // 设置总上传数据总大小100G
 
 		return factory.createMultipartConfig();
 	}

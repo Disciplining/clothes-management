@@ -13,3 +13,5 @@ qiuniuOSS:
     secret_key: SQ7MwgAQbsT1Sp-RwBFWyAK3m8vUU4fhCgvuEkIb
     bucket_name: liyanxing-pic-server
     domain: http://pic.liyanxing.top/
+
+clothes-pic-max-size-mb: 20 # 衣物图片的文件最大为20MB
