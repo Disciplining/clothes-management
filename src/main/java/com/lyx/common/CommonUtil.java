@@ -38,8 +38,6 @@ public class CommonUtil
 			return true;
 		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_PNG))
 			return true;
-		if( StrUtil.equalsIgnoreCase(type, ImgUtil.IMAGE_TYPE_PSD))
-			return true;
 
 		return false;
 	}

@@ -36,15 +36,13 @@ public class QiniuOSS
 	 * @param pic 图片文件
 	 * @return 外链
 	 */
-	public String uploadClothesPic(MultipartFile pic)
+	public String uploadClothesPic(MultipartFile pic, int kind)
 	{
 		try
 		{
 			StringBuilder key = new StringBuilder()
-					.append("clothes/")
-					.append(IdUtil.simpleUUID())
-					.append(".")
-					.append(CommonUtil.getType(pic.getOriginalFilename()));
+									.append("clothes/").append(kind).append("/")
+									.append(IdUtil.simpleUUID()).append(".").append(CommonUtil.getType(pic.getOriginalFilename()));
 			return this.upload(pic.getBytes(), key.toString());
 		}
 		catch (IOException e)

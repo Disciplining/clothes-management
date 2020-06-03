@@ -53,7 +53,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 				return CommonResult.errorMsg("衣物图片的大小必须为 430x430");
 
 			// 上传图片到OSS
-			String url = qiniuOSS.uploadClothesPic(dto.getPicFile());
+			String url = qiniuOSS.uploadClothesPic(dto.getPicFile(), dto.getKind());
 			if (StrUtil.isBlank(url))
 				return CommonResult.errorMsg("图片上传失败");
 
