@@ -93,7 +93,7 @@
                 // 组建要发送的数据
                 var formdata = new FormData();
                 formdata.append('cName', $('input[name=cName]').val());
-                formdata.append('kind', $('input[name=kind]').val());
+                formdata.append('kind', $('input[name=kind]:checked').val());
                 formdata.append('picFile', $('input[name=picFile]')[0].files[0]);
 
                 $.ajax
@@ -108,8 +108,7 @@
                         {
                             if (res.success)
                             {
-                                alert('跳转页面');
-                                // window.location.href="/page/clothes-list.html?cid=" + $('input[name="kind"]:checked').val();
+                                window.location.href="/page/clothes-list.html?cid=" + $('input[name="kind"]:checked').val();
                             }
                             else
                             {
