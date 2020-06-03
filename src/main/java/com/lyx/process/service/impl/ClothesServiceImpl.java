@@ -39,7 +39,7 @@ public class ClothesServiceImpl extends ServiceImpl<ClothesMapper, Clothes> impl
 	private double picMaxSize;
 
 	@Override
-	public CommonResult uploadClothes(ClothesSaveDto dto)
+	public CommonResult saveClothes(ClothesSaveDto dto)
 	{
 		try
 		{

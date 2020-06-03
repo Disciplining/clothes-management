@@ -30,7 +30,7 @@ public class ClothesController
 	@ApiModelProperty("增加衣物")
 	public CommonResult uploadClothes(ClothesSaveDto dto)
 	{
-		return service.uploadClothes(dto);
+		return service.saveClothes(dto);
 	}
 
 	@DeleteMapping("/remove/{id}")

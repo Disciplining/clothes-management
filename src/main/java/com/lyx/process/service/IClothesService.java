@@ -15,7 +15,7 @@ import com.lyx.entity.Clothes;
  */
 public interface IClothesService extends IService<Clothes>
 {
-	CommonResult uploadClothes(ClothesSaveDto dto);
+	CommonResult saveClothes(ClothesSaveDto dto);
 
 	CommonResult remove(int id);
 
